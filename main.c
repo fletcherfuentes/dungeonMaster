@@ -9,7 +9,9 @@ typedef struct{
   char roomDescription[512];
 } Room;
 
-//int findNumOfRooms(FILE *fp)
+Room* roomsCreate(FILE *fp);
+void printRooms(Room *rooms);
+
 
 int main(int argc, char *argv[]){
   if(argc > 2){
@@ -22,11 +24,16 @@ int main(int argc, char *argv[]){
     printf("Could not open file\n");
     return 1;
   }
-  
-  
+
+  Room* rooms = roomsCreate(fp);
+  printRooms(rooms);
+
+  return 0;
+}
+
+Room* roomsCreate(FILE *fp){
   char buffer[512];
   char sep[] = ":";
-  char space[] = " ";
 
   int counter = 0;
   int numOfRooms = 10;
@@ -35,8 +42,7 @@ int main(int argc, char *argv[]){
   while(fgets(buffer, sizeof(buffer), fp)){
     char *tp = strtok(buffer, sep);
     char *desc = strtok(NULL, sep);
-    //desc = strtok(NULL, space);
-    printf("%s\n", buffer);
+    desc++;
     
     int compare = strcmp(tp, "Room Name");
     if (compare == 0) counter+=1;
@@ -47,16 +53,21 @@ int main(int argc, char *argv[]){
     }
 
     int findName = strcmp(tp, "Room Name");
-    int findCode = strcmp(tp, "Room Name");
-    int findDesc = strcmp(tp, "Room Name");
+    int findCode = strcmp(tp, "Room Code");
+    int findDesc = strcmp(tp, "Room Description");
 
-    if (findName == 0){ strcpy(rooms[counter-1].roomName, desc); printf("%s\n",desc);}
+    if (findName == 0) strcpy(rooms[counter-1].roomName, desc);
     if (findCode == 0) strcpy(rooms[counter-1].roomCode, desc);
     if (findDesc == 0) strcpy(rooms[counter-1].roomDescription, desc);
 
   }
+  return rooms;
+}
 
-  printf("%s\n",rooms[0].roomName);
-
-  return 0;
+void printRooms(Room *rooms){
+  int size = sizeof(rooms)/sizeof(rooms[0]);
+  // for (int i = 0; i < 20; i++){
+  //   printf("Room %s: %s",rooms[i].roomCode, rooms[i].roomName);
+  // }
+  printf("%d", size);
 }
